@@ -102,6 +102,42 @@ class Pair<A, B> {
   String toString() => '($first, $second)';
 }
 
+//   Part 5
+class BookNotFoundException implements Exception {
+  final String title;
+  BookNotFoundException(this.title);
+}
+
+class BookNotAvailableException implements Exception {
+  final String title;
+  BookNotAvailableException(this.title);
+}
+
+void checkOut(Map<String, int> stock, String title) {
+  if (!stock.containsKey(title)) {
+    throw BookNotFoundException(title);
+  }
+  if (stock[title]! <= 0) {
+    throw BookNotAvailableException(title);
+  }
+  stock[title] = stock[title]! - 1;
+}
+
+Map<String, dynamic> findBook(String title) {
+  return books.firstWhere((b) => b['title'] == title);
+}
+
+//  Part 6
+Future<String> fetchBookOfTheDay() async {
+  await Future.delayed(Duration(seconds: 1));
+  return 'Dart in Action';
+}
+
+Future<String> fetchBroken() async {
+  await Future.delayed(Duration(milliseconds: 500));
+  throw Exception('Server down');
+}
+
 void main() async {
   part1();
   part2();
@@ -193,8 +229,47 @@ void part4() {
 
 void part5() {
   print('\n--- Part 5 ---');
+  var stock = buildStock();
+  var checkoutTitles = ['Dart in Action', 'Flutter Basics', 'Unknown Book'];
+  for (var title in checkoutTitles) {
+    try {
+      checkOut(stock, title);
+      print('Checked out: $title');
+    } on BookNotFoundException {
+      print('Not found: "$title"');
+    } on BookNotAvailableException {
+      print('Sorry: "$title" has no copies left');
+    } finally {
+      print('Transaction logged.');
+    }
+  }
+  print('Copies left of Dart in Action: ${stock['Dart in Action']}');
+  try {
+    findBook('Missing');
+  } on StateError {
+    print('Search failed: no such book');
+  }
 }
 
 Future<void> part6() async {
   print('\n--- Part 6 ---');
+  print('Fetching...');
+  var book = await fetchBookOfTheDay();
+  print('Book of the day: $book');
+  try {
+    await fetchBroken();
+  } catch (e) {
+    print('Fetch failed: $e');
+  }
 }
+
+// ANSWERS
+
+// 1. We choose fold over reduce when the collection might be empty, because reduce throws an error on an empty list, and fold lets us provide a safe starting value.
+
+// 2. It means the inner function remembers and can still use a variable from the outer function even after the outer function finishes.
+// In makeCounter, the variable `count` was captured.
+
+// 3. Dart checks try-catch blocks from top to bottom. If we put the general catch first, it catches everything, and our specific exception block will never run.
+
+// 4. Because without await, Dart doesn't wait for the task to finish, so it gives the Future object instead of the actual value.
