@@ -51,6 +51,10 @@ class MenuItem {
   MenuItem.fromString(String text)
     : name = text.split(':')[0].trim(),
       price = int.parse(text.split(':')[1].trim());
+
+  // step 8
+  @override
+  String toString() => '$name (Rs $price)';
 }
 
 // step 4
@@ -110,6 +114,45 @@ class StudentCard {
     } else {
       _balance = v;
     }
+  }
+}
+
+// step 8
+List<MenuItem> buildMenu() {
+  return [
+    for (int k = 0; k < 4; k++)
+      MenuItem.fromString(
+        '${menu[(u + 3 * k) % 10]}:${priceOf((u + 3 * k) % 10)}',
+      ),
+  ];
+}
+
+// step 9
+List<OrderLine> buildReceipt() {
+  List<MenuItem> items = buildMenu();
+  return [for (int k = 0; k < 3; k++) OrderLine(items[k], 1 + (t + k) % 4)];
+}
+
+// step 10
+class Coupon {
+  static final Map<String, Coupon> _cache = {};
+  final String code;
+  final int percent;
+  final int minSpend;
+
+  Coupon(this.code, this.percent)
+    : minSpend = percent * 70,
+      assert(percent >= 1 && percent <= 50, 'percent must be between 1 and 50');
+
+  factory Coupon.fromCode(String code) {
+    return _cache.putIfAbsent(code, () => Coupon(code, couponPercent));
+  }
+
+  int discountOn(int amount) {
+    if (amount >= minSpend) {
+      return amount * percent ~/ 100;
+    }
+    return 0;
   }
 }
 
@@ -227,12 +270,55 @@ void step7() {
 
 void step8() {
   print('--- Step 8 ---');
+  List<MenuItem> items = buildMenu();
+
+  MenuItem priciest = items.reduce((a, b) => a.price > b.price ? a : b);
+  int sum = items.fold(0, (total, item) => total + item.price);
+
+  print('Step 8: menu = $items');
+  print('Step 8: priciest = ${priciest.name}');
+  print('Step 8: sum = $sum');
 }
 
 void step9() {
   print('--- Step 9 ---');
+  List<OrderLine> receipt = buildReceipt();
+  int totalGrand = 0;
+
+  for (var line in receipt) {
+    print('Step 9: ${line.label} = ${line.grand}');
+    OrderLog().add('receipt: ${line.label}');
+    totalGrand += line.grand;
+  }
+
+  print('Step 9: receipt total = $totalGrand');
+  print('Step 9: log size = ${OrderLog().entries.length}');
 }
 
 void step10() {
   print('--- Step 10 ---');
+  String code = 'CAFE${seed.toString().padLeft(2, '0')}';
+  Coupon c1 = Coupon.fromCode(code);
+  Coupon c2 = Coupon.fromCode(code);
+
+  int receipt = buildReceipt().fold(0, (sum, line) => sum + line.grand);
+  int discount = c1.discountOn(receipt);
+
+  print(
+    'Step 10: ${c1.code} gives ${c1.percent}% off, min spend ${c1.minSpend}',
+  );
+  print('Step 10: cached? ${identical(c1, c2)}');
+  print(
+    'Step 10: receipt $receipt, discount $discount, payable ${receipt - discount}',
+  );
 }
+
+// Question/Answers
+
+// 1. It saves from writing extra repetitive code like this.name = name; inside the constructor body.
+
+// 2. We use a named constructor to make a new object in different ways, and a factory constructor when we want to return an existing cached object instead of always creating a new one.
+
+// 3. An initializer list sets values before the object is created, while the constructor body runs after the object is already made.
+
+// 4. A getter is used to calculate a value only when needed, while a setter is used to check or validate data before saving it.
