@@ -130,6 +130,22 @@ extension ShelfMath on List<LibraryItem> {
   int totalLateFee(int days) =>
       fold(0, (sum, item) => sum + item.lateFee(days));
 }
+// task 8.1
+class Fine {
+  final int amount;
+  const Fine(this.amount);
+  Fine operator +(Fine o) => Fine(amount + o.amount);
+  bool operator >(Fine o) => amount > o.amount;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is Fine && other.amount == amount);
+
+  @override
+  int get hashCode => amount.hashCode;
+
+  @override
+  String toString() => 'Fine ($amount)';
+}
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
   step1();
@@ -216,6 +232,15 @@ void step7() {
   print('Step 7: initials of "${titles[u]}" = ${titles[u].initials}');
   print('Step 7: shelf fee for $daysLate days = ${shelf.totalLateFee(daysLate).rs}');
 }
-void step8() { print('--- Step 8 ---'); }
+void step8() {
+  print('--- Step 8 ---');
+  // task 8.2
+  final Fine f1 = Fine(mainBook().lateFee(daysLate));
+  final Fine f2 = Fine(mainMagazine().lateFee(daysLate));
+  print('Step 8: $f1 + $f2 = ${f1 + f2}');
+  print('Step 8: first bigger? ${f1 > f2}');
+  print('Step 8: equal copies? ${f1 == Fine(f1.amount)}');
+  print('Step 8: set size = ${{f1, Fine(f1.amount), f2}.length}');
+}
 void step9() { print('--- Step 9 ---'); }
 void step10() { print('--- Step 10 ---'); }
