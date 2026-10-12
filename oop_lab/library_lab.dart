@@ -1,5 +1,5 @@
 // library_lab.dart  -  Campus Library System
-// Name: ____________________   Roll no: ____________
+// Name: Huzaifa Qayyum   Roll no: 04072313048
 
 const String rollNo = '04072313048';   // e.g. '21F-0347'
 
@@ -23,7 +23,20 @@ final int renewLimit = 1 + t % 3;           // renewals allowed per item
 final int renewAttempts = 2 + u;            // renewal attempts made in Step 5
 final int shelfSize = 3 + u % 4;            // items on the shelf in Steps 9-10
 // ===========================================================================
+// step 1
+class LibraryItem {
+  final String title;
+  final int year;
+  LibraryItem(this.title, this.year);
+}
 
+class Book extends LibraryItem {
+  final int pages;
+  Book(super.title, super.year, this.pages);
+}
+
+Book mainBook() =>
+ Book(titles[u], yearOf(u), 100 + 3 * seed);
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
   step1();
@@ -38,7 +51,15 @@ void main() {
   step10();
 }
 
-void step1() { print('--- Step 1 ---'); }
+void step1() {
+  print('--- Step 1 ---');
+  final Book b = mainBook();
+  final LibraryItem item = b;
+  print('Step 1: ${b.title} (${b.year}),${b.pages} pages');
+  print('Step 1: stored as LibraryItem: ${item.title}');
+  print('Step 1: runtimeType = ${item.runtimeType}');
+  // The item.pages is a compile error because the static type of 'item' is LibraryItem, which does not have a pages field
+}
 void step2() { print('--- Step 2 ---'); }
 void step3() { print('--- Step 3 ---'); }
 void step4() { print('--- Step 4 ---'); }
