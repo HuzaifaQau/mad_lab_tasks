@@ -34,9 +34,16 @@ abstract class LibraryItem {
   // task 3.1
   int lateFee(int days);
 }
+// task 4.1
+abstract class Borrowable {
+  bool get isAvailable;
+  void borrow();
+  void giveBack();
+}
 // task 1.2
-class Book extends LibraryItem {
+class Book extends LibraryItem implements Borrowable {
   final int pages;
+  bool _out = false;
   Book(super.title, super.year, this.pages);
   // task 2.2
   @override
@@ -44,6 +51,15 @@ class Book extends LibraryItem {
   // task 3.2
   @override 
   int lateFee(int days) => days * feePerDay;
+  // task 4.2
+  @override
+  bool get isAvailable => !_out;
+
+  @override
+  void borrow() => _out = true;
+
+  @override
+  void giveBack() => _out = false;
 }
 // task 1.3
 Book mainBook() =>
@@ -116,7 +132,21 @@ void step3() {
   print('Step 3: Magazine late fee for $daysLate days = ${mainMagazine().lateFee(daysLate)}');
   print('Step 3: Dvd late fee for $daysLate days = ${mainDvd().lateFee(daysLate)}');
 }
-void step4() { print('--- Step 4 ---'); }
+void step4() {
+  print('--- Step 4 ---');
+  final Book book = mainBook();
+  print('Step 4: available? ${book.isAvailable}');
+  book.borrow();
+  print('Step 4: after borrow? ${book.isAvailable}');
+  book.giveBack();
+  print('Step 4: after return? ${book.isAvailable}');
+// task 4.3
+  final List<LibraryItem> items = [book, mainMagazine(), mainDvd()];
+  for (final item in items) {
+    print('Step 4: ${item.runtimeType} borrowable? ${item is Borrowable}');
+  }
+  // extends inherits actual code and use dart's single parent limit and implements only sets the rules
+}
 void step5() { print('--- Step 5 ---'); }
 void step6() { print('--- Step 6 ---'); }
 void step7() { print('--- Step 7 ---'); }
