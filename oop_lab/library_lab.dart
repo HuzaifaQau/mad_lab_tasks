@@ -23,7 +23,17 @@ final int renewLimit = 1 + t % 3;           // renewals allowed per item
 final int renewAttempts = 2 + u;            // renewal attempts made in Step 5
 final int shelfSize = 3 + u % 4;            // items on the shelf in Steps 9-10
 // ===========================================================================
-// step 1
+// task 5.1
+mixin Renewable {
+  int renewals = 0;
+  bool renew(int limit) {
+    if (renewals >= limit) {
+      return false;
+    }
+    renewals++;
+    return true;
+  }
+}
 // task 1.1
 abstract class LibraryItem {
   final String title;
@@ -41,7 +51,7 @@ abstract class Borrowable {
   void giveBack();
 }
 // task 1.2
-class Book extends LibraryItem implements Borrowable {
+class Book extends LibraryItem with Renewable implements Borrowable {
   final int pages;
   bool _out = false;
   Book(super.title, super.year, this.pages);
@@ -82,10 +92,11 @@ Magazine mainMagazine() {
   return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
 }
 
-// task 3.3
-class Dvd extends LibraryItem {
+// task 3.3 && 5.2
+class Dvd extends LibraryItem with Renewable {
   final int minutes;
   Dvd(super.title, super.year, this.minutes);
+
   @override
   String describe() => '${super.describe()}, $minutes min';
 
@@ -147,7 +158,21 @@ void step4() {
   }
   // extends inherits actual code and use dart's single parent limit and implements only sets the rules
 }
-void step5() { print('--- Step 5 ---'); }
+void step5() {
+  print('--- Step 5 ---');
+  // task 5.3
+  final Book book = mainBook();
+  int ok = 0;
+  for (int attempt = 0; attempt < renewAttempts; attempt++) {
+    if (book.renew(renewLimit)) {
+      ok++;
+    }
+  }
+  print('Step 5: renewed $ok of $renewAttempts attempts (limit $renewLimit)');
+  print('Step 5: renew once more? ${book.renew(renewLimit)}');
+  print('Step 5: dvd can renew too? ${mainDvd().renew(1)}');
+// A mixin lets Book and Dvd share renew() without giving it to Magazine
+}
 void step6() { print('--- Step 6 ---'); }
 void step7() { print('--- Step 7 ---'); }
 void step8() { print('--- Step 8 ---'); }
