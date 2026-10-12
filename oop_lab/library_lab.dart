@@ -108,6 +108,17 @@ Dvd mainDvd() {
   final int i = (u + 2) % 10;
   return Dvd(titles[i], yearOf(i), 90 + seed % 40);
 }
+// task 6.1
+enum MemberType {
+  student(3, 50),
+  faculty(10, 20),
+  guest(1, 0);
+  final int maxLoans;
+  final int discountPercent;
+
+  const MemberType(this.maxLoans, this.discountPercent);
+  int applyDiscount(int fee) => fee - (fee * discountPercent ~/ 100);
+}
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
   step1();
@@ -173,7 +184,16 @@ void step5() {
   print('Step 5: dvd can renew too? ${mainDvd().renew(1)}');
 // A mixin lets Book and Dvd share renew() without giving it to Magazine
 }
-void step6() { print('--- Step 6 ---'); }
+void step6() {
+  print('--- Step 6 ---');
+  // task 6.2
+  final MemberType type = MemberType.values[seed % 3];
+  final int fee = mainBook().lateFee(daysLate);
+  print('Step 6: member type ${type.name} (index ${type.index})');
+  print('Step 6: max loans = ${type.maxLoans}');
+  print('Step 6: book fee $fee -> ${type.applyDiscount(fee)} after discount');
+// Enums MemberType prevent spelling mistake and invalid values at compile time
+}
 void step7() { print('--- Step 7 ---'); }
 void step8() { print('--- Step 8 ---'); }
 void step9() { print('--- Step 9 ---'); }
