@@ -24,19 +24,39 @@ final int renewAttempts = 2 + u;            // renewal attempts made in Step 5
 final int shelfSize = 3 + u % 4;            // items on the shelf in Steps 9-10
 // ===========================================================================
 // step 1
+// task 1.1
 class LibraryItem {
   final String title;
   final int year;
   LibraryItem(this.title, this.year);
+  // task 2.1
+  String describe() => '$title ($year)';
 }
-
+// task 1.2
 class Book extends LibraryItem {
   final int pages;
   Book(super.title, super.year, this.pages);
+  // task 2.2
+  @override
+  String describe() => '${super.describe()}, $pages pages';
 }
-
+// task 1.3
 Book mainBook() =>
  Book(titles[u], yearOf(u), 100 + 3 * seed);
+
+ // task 2.3
+ class Magazine extends LibraryItem {
+  final int issue;
+  Magazine(super.title, super.year, this.issue);
+
+  @override
+  String describe() => '${super.describe()}, issue $issue';
+}
+
+Magazine mainMagazine() {
+  final int i = (u + 1) % 10;
+  return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
+}
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
   step1();
@@ -60,7 +80,12 @@ void step1() {
   print('Step 1: runtimeType = ${item.runtimeType}');
   // The item.pages is a compile error because the static type of 'item' is LibraryItem, which does not have a pages field
 }
-void step2() { print('--- Step 2 ---'); }
+void step2() {
+  print('--- Step 2 ---');
+  print('Step 2: ${mainBook().describe()}');
+  print('Step 2: ${mainMagazine().describe()}');
+  // If we mistyped the method as descibe() without @override, dart will treat it as a new separate method instead of overriding
+}
 void step3() { print('--- Step 3 ---'); }
 void step4() { print('--- Step 4 ---'); }
 void step5() { print('--- Step 5 ---'); }
