@@ -25,12 +25,14 @@ final int shelfSize = 3 + u % 4;            // items on the shelf in Steps 9-10
 // ===========================================================================
 // step 1
 // task 1.1
-class LibraryItem {
+abstract class LibraryItem {
   final String title;
   final int year;
   LibraryItem(this.title, this.year);
   // task 2.1
   String describe() => '$title ($year)';
+  // task 3.1
+  int lateFee(int days);
 }
 // task 1.2
 class Book extends LibraryItem {
@@ -39,6 +41,9 @@ class Book extends LibraryItem {
   // task 2.2
   @override
   String describe() => '${super.describe()}, $pages pages';
+  // task 3.2
+  @override 
+  int lateFee(int days) => days * feePerDay;
 }
 // task 1.3
 Book mainBook() =>
@@ -51,11 +56,30 @@ Book mainBook() =>
 
   @override
   String describe() => '${super.describe()}, issue $issue';
+  // task 3.2
+  @override
+  int lateFee(int days) => days * (feePerDay ~/ 2);
 }
 
 Magazine mainMagazine() {
   final int i = (u + 1) % 10;
   return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
+}
+
+// task 3.3
+class Dvd extends LibraryItem {
+  final int minutes;
+  Dvd(super.title, super.year, this.minutes);
+  @override
+  String describe() => '${super.describe()}, $minutes min';
+
+  @override
+  int lateFee(int days) => days * feePerDay * 2;
+}
+
+Dvd mainDvd() {
+  final int i = (u + 2) % 10;
+  return Dvd(titles[i], yearOf(i), 90 + seed % 40);
 }
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
@@ -86,7 +110,12 @@ void step2() {
   print('Step 2: ${mainMagazine().describe()}');
   // If we mistyped the method as descibe() without @override, dart will treat it as a new separate method instead of overriding
 }
-void step3() { print('--- Step 3 ---'); }
+void step3() {
+  print('--- Step 3 ---');
+  print('Step 3: Book late fee for $daysLate days = ${mainBook().lateFee(daysLate)}');
+  print('Step 3: Magazine late fee for $daysLate days = ${mainMagazine().lateFee(daysLate)}');
+  print('Step 3: Dvd late fee for $daysLate days = ${mainDvd().lateFee(daysLate)}');
+}
 void step4() { print('--- Step 4 ---'); }
 void step5() { print('--- Step 5 ---'); }
 void step6() { print('--- Step 6 ---'); }
