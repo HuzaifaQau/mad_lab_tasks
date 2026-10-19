@@ -28,6 +28,22 @@ final int bugStep = 1 + u % 4; // used by BuggyCounter in Step 7
 final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
+// Task 1.2
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Study Tracker: $course'),
+      ),
+      body: const Center(
+        child: Text('Hello'),
+      ),
+    );
+  }
+}
 
 // Keep the name LabApp and its const constructor: the checker uses them.
 class LabApp extends StatelessWidget {
@@ -35,11 +51,10 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step 1 replaces everything below.
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(child: Text('Setup OK: seed $seed (t=$t, u=$u)')),
-      ),
+    // Task 1.1
+    return const MaterialApp(
+      title: 'Study Tracker',
+      home: HomePage(),
     );
   }
 }
