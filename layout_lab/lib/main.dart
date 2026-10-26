@@ -122,6 +122,9 @@ class HomePage extends StatelessWidget {
             // Task 5.2: Replace temporary Row with SwapBoard
             SwapBoard(),
             SizedBox(height: 12),
+            // Task 6.1: InfoPanel below SwapBoard
+            InfoPanel(),
+            SizedBox(height: 12),
           ],
         ),
       ),
@@ -355,6 +358,43 @@ class _SwapBoardState extends State<SwapBoard> {
           key: const Key('swap'),
           onPressed: swap,
           child: const Text('Swap'),
+        ),
+      ],
+    );
+  }
+}
+
+// Step 6
+// Think: In Column, the main axis is vertical
+// crossAxisAlignment in a Column aligns along the cross axis, which is horizontal
+class InfoPanel extends StatelessWidget {
+  const InfoPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Task 6.2
+        Row(
+          key: const Key('info-row'),
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text('Start: ${startSec}s', key: const Key('row-a')),
+            Text('Tick: ${tick}s', key: const Key('row-b')),
+            Text('Stop: ${stopAt}s', key: const Key('row-c')),
+          ],
+        ),
+        const SizedBox(height: 12),
+        // Task 6.3
+        Column(
+          key: const Key('info-col'),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Name: $studentName', key: const Key('col-a')),
+            Text('Roll no: $rollNo', key: const Key('col-b')),
+            Text('Course: $course', key: const Key('col-c')),
+          ],
         ),
       ],
     );
