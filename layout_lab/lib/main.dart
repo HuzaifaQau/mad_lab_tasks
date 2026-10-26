@@ -107,15 +107,27 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Team Board: $course')),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SettingsCard(),
-            SizedBox(height: 12),
-            Clock(),
-            SizedBox(height: 12),
+            const SettingsCard(),
+            const SizedBox(height: 12),
+            // Task 4.1: Welcome placed above Clock
+            const Welcome(),
+            const SizedBox(height: 12),
+            const Clock(),
+            const SizedBox(height: 12),
+            // Task 4.3: Temporary Row below Clock
+            Row(
+              children: [
+                Tile(tileA),
+                Tile(tileB),
+                Tile(tileC),
+              ],
+            ),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -270,6 +282,50 @@ class Probe extends StatelessWidget {
           key: const Key('probe-above'),
         ),
       ],
+    );
+  }
+}
+
+// Step 4
+// Think: The style used is called Composition and flutter prefers composition over inheritance because it offers greater flexibility, reusability
+
+// Task 4.1
+class Welcome extends StatelessWidget {
+  const Welcome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Welcome, $studentName',
+        key: const Key('welcome'),
+      ),
+    );
+  }
+}
+
+// Task 4.2
+class Tile extends StatefulWidget {
+  final String label;
+
+  const Tile(this.label, {super.key});
+
+  @override
+  State<Tile> createState() => _TileState();
+}
+
+class _TileState extends State<Tile> {
+  int taps = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          taps++;
+        });
+      },
+      child: Text('${widget.label}: $taps'),
     );
   }
 }
