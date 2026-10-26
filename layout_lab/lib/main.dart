@@ -107,27 +107,21 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Team Board: $course')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SettingsCard(),
-            const SizedBox(height: 12),
+            SettingsCard(),
+            SizedBox(height: 12),
             // Task 4.1: Welcome placed above Clock
-            const Welcome(),
-            const SizedBox(height: 12),
-            const Clock(),
-            const SizedBox(height: 12),
-            // Task 4.3: Temporary Row below Clock
-            Row(
-              children: [
-                Tile(tileA),
-                Tile(tileB),
-                Tile(tileC),
-              ],
-            ),
-            const SizedBox(height: 12),
+            Welcome(),
+            SizedBox(height: 12),
+            Clock(),
+            SizedBox(height: 12),
+            // Task 5.2: Replace temporary Row with SwapBoard
+            SwapBoard(),
+            SizedBox(height: 12),
           ],
         ),
       ),
@@ -326,6 +320,43 @@ class _TileState extends State<Tile> {
         });
       },
       child: Text('${widget.label}: $taps'),
+    );
+  }
+}
+
+// Step 5
+// Think: Without keys, Flutter matches each new widget to the existing Element by type and tree position
+class SwapBoard extends StatefulWidget {
+  const SwapBoard({super.key});
+
+  @override
+  State<SwapBoard> createState() => _SwapBoardState();
+}
+
+class _SwapBoardState extends State<SwapBoard> {
+  // Task 5.1
+  var tiles = [
+    Tile(tileA, key: ValueKey(tileA)),
+    Tile(tileB, key: ValueKey(tileB)),
+    Tile(tileC, key: ValueKey(tileC)),
+  ];
+
+  void swap() => setState(() => tiles = tiles.reversed.toList());
+
+  // Task 5.2
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: tiles,
+        ),
+        ElevatedButton(
+          key: const Key('swap'),
+          onPressed: swap,
+          child: const Text('Swap'),
+        ),
+      ],
     );
   }
 }
