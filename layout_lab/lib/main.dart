@@ -131,6 +131,9 @@ class HomePage extends StatelessWidget {
             // Step 8: ShareRow below SummaryRow
             ShareRow(),
             SizedBox(height: 12),
+            // Step 9: InfoBox below ShareRow
+            InfoBox(),
+            SizedBox(height: 12),
           ],
         ),
       ),
@@ -449,6 +452,28 @@ class ShareRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// Step 9
+// Think: Padding is inside the border, margin is outside the border
+// Use Padding or SizedBox when only need spacing/size without color, borders, or decorations
+class InfoBox extends StatelessWidget {
+  const InfoBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('info-box'),
+      margin: EdgeInsets.all(boxMargin),
+      padding: EdgeInsets.all(boxPad),
+      decoration: BoxDecoration(
+        color: swatches[hue]!.shade100,
+        borderRadius: BorderRadius.circular(boxRadius),
+        border: Border.all(width: boxBorder),
+      ),
+      child: Text('Course: $course', key: const Key('box-text')),
     );
   }
 }
