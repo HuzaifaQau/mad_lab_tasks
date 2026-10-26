@@ -224,6 +224,51 @@ class _ClockState extends State<Clock> {
           'Builds: $_builds',
           key: const Key('builds'),
         ),
+        // Task 3.3
+        Probe(seconds: _seconds),
+      ],
+    );
+  }
+}
+
+// Step 3
+// Think: The Widget is cheap and thrown away on every rebuild.
+// The Element is kept in memory and holds the State.
+// The RenderObject sits below the Element in the render tree. Its job is to calculate size, layout, and paint pixels on screen.
+class Probe extends StatelessWidget {
+  // Task 3.1
+  final int seconds;
+
+  const Probe({super.key, required this.seconds});
+
+  @override
+  Widget build(BuildContext context) {
+    // Task 3.2
+    final bool above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Seen at: $seconds s',
+          key: const Key('probe-seen'),
+        ),
+        Text(
+          'Widget #${identityHashCode(this)}',
+          key: const Key('probe-widget'),
+        ),
+        Text(
+          'Element #${identityHashCode(context)}',
+          key: const Key('probe-element'),
+        ),
+        Text(
+          'Context belongs to: ${context.widget.runtimeType}',
+          key: const Key('probe-context'),
+        ),
+        Text(
+          'Scaffold above me: $above',
+          key: const Key('probe-above'),
+        ),
       ],
     );
   }
