@@ -1,6 +1,5 @@
-// main.dart - Team Board lab
+// main.dart Team Board lab
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 const String studentName = 'Huzaifa Qayyum';
@@ -12,15 +11,32 @@ final int t = seed ~/ 10; // tens digit
 final int u = seed % 10; // units digit
 
 const List<String> courses = [
-  'Mobile Dev', 'Data Structures', 'Operating Systems', 'Databases',
-  'Networks', 'Software Eng', 'AI', 'Web Engineering', 'Graphics', 'Security',
+  'Mobile Dev',
+  'Data Structures',
+  'Operating Systems',
+  'Databases',
+  'Networks',
+  'Software Eng',
+  'AI',
+  'Web Engineering',
+  'Graphics',
+  'Security',
 ];
+
 const List<String> names = ['Ali', 'Sara', 'Omar', 'Hina', 'Zain', 'Maya'];
+
 const List<String> mains = [
-  'start', 'center', 'end', 'spaceBetween', 'spaceAround', 'spaceEvenly',
+  'start',
+  'center',
+  'end',
+  'spaceBetween',
+  'spaceAround',
+  'spaceEvenly',
 ];
+
 const List<String> crosses = ['start', 'center', 'end'];
 const List<String> hues = ['teal', 'indigo', 'orange', 'pink', 'green'];
+
 const Map<String, MaterialColor> swatches = {
   'teal': Colors.teal,
   'indigo': Colors.indigo,
@@ -77,7 +93,10 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(title: 'Team Board', home: HomePage());
+    return const MaterialApp(
+      title: 'Team Board',
+      home: HomePage(),
+    );
   }
 }
 
@@ -88,15 +107,15 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Team Board: $course')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SettingsCard(),
-            const SizedBox(height: 12),
-            // Add each new widget BELOW the previous one, in the order the
-            // steps tell you, with a SizedBox(height: 12) between widgets.
+            SettingsCard(),
+            SizedBox(height: 12),
+            Clock(),
+            SizedBox(height: 12),
           ],
         ),
       ),
@@ -146,6 +165,40 @@ class SummaryRow extends StatelessWidget {
           key: const Key('sum-c'),
         ),
       ],
+    );
+  }
+}
+
+// Step 1
+// Think: We start the Timer in initState because it is called only once when the widget is inserted into the widget tree.
+// If we started it in build(), a new timer would be created on every single rebuild, causing timers to multiply and the clock to speed up exponentially.
+class Clock extends StatefulWidget {
+  const Clock({super.key});
+
+  @override
+  State<Clock> createState() => _ClockState();
+}
+
+class _ClockState extends State<Clock> {
+  late Timer _timer;
+  int _seconds = startSec;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _seconds += tick);
+      if (_seconds >= stopAt) {
+        timer.cancel(); // stop at your limit
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Session: $_seconds s',
+      key: const Key('clock'),
     );
   }
 }
