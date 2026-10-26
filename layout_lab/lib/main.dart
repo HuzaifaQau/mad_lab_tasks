@@ -1,5 +1,6 @@
 // main.dart Team Board lab
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 const String studentName = 'Huzaifa Qayyum';
@@ -93,10 +94,7 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Team Board',
-      home: HomePage(),
-    );
+    return const MaterialApp(title: 'Team Board', home: HomePage());
   }
 }
 
@@ -244,14 +242,8 @@ class _ClockState extends State<Clock> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Session: $_seconds s',
-          key: const Key('clock'),
-        ),
-        Text(
-          'Builds: $_builds',
-          key: const Key('builds'),
-        ),
+        Text('Session: $_seconds s', key: const Key('clock')),
+        Text('Builds: $_builds', key: const Key('builds')),
         // Task 3.3
         Probe(seconds: _seconds),
       ],
@@ -272,15 +264,13 @@ class Probe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Task 3.2
-    final bool above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
+    final bool above =
+        context.findAncestorWidgetOfExactType<Scaffold>() != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Seen at: $seconds s',
-          key: const Key('probe-seen'),
-        ),
+        Text('Seen at: $seconds s', key: const Key('probe-seen')),
         Text(
           'Widget #${identityHashCode(this)}',
           key: const Key('probe-widget'),
@@ -293,10 +283,7 @@ class Probe extends StatelessWidget {
           'Context belongs to: ${context.widget.runtimeType}',
           key: const Key('probe-context'),
         ),
-        Text(
-          'Scaffold above me: $above',
-          key: const Key('probe-above'),
-        ),
+        Text('Scaffold above me: $above', key: const Key('probe-above')),
       ],
     );
   }
@@ -312,10 +299,7 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        'Welcome, $studentName',
-        key: const Key('welcome'),
-      ),
+      child: Text('Welcome, $studentName', key: const Key('welcome')),
     );
   }
 }
@@ -370,9 +354,7 @@ class _SwapBoardState extends State<SwapBoard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: tiles,
-        ),
+        Row(children: tiles),
         ElevatedButton(
           key: const Key('swap'),
           onPressed: swap,
@@ -433,10 +415,7 @@ class ShareRow extends StatelessWidget {
         SizedBox(
           key: const Key('fixed'),
           width: fixedW,
-          child: ElevatedButton(
-            onPressed: () {},
-            child: const Text('F'),
-          ),
+          child: ElevatedButton(onPressed: () {}, child: const Text('F')),
         ),
         Expanded(
           flex: flexA,
