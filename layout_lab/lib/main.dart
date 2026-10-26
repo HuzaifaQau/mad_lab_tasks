@@ -172,6 +172,10 @@ class SummaryRow extends StatelessWidget {
 // Step 1
 // Think: We start the Timer in initState because it is called only once when the widget is inserted into the widget tree.
 // If we started it in build(), a new timer would be created on every single rebuild, causing timers to multiply and the clock to speed up exponentially.
+
+// Step 2
+// Think: Builds goes up by 1 per second because the timer calls setState() once every second, triggering one rebuild
+// If timer.cancel() is missing in dispose, flutter throws: "setState() called after dispose()"
 class Clock extends StatefulWidget {
   const Clock({super.key});
 
@@ -183,9 +187,13 @@ class _ClockState extends State<Clock> {
   late Timer _timer;
   int _seconds = startSec;
 
+  int _builds = 0;
+
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState');
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _seconds += tick);
       if (_seconds >= stopAt) {
@@ -195,10 +203,28 @@ class _ClockState extends State<Clock> {
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    lifecycleLog.add('dispose');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Text(
-      'Session: $_seconds s',
-      key: const Key('clock'),
+    _builds++;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Session: $_seconds s',
+          key: const Key('clock'),
+        ),
+        Text(
+          'Builds: $_builds',
+          key: const Key('builds'),
+        ),
+      ],
     );
   }
 }
